@@ -1,6 +1,7 @@
 plugins {
   id 'com.android.library'
   id 'kotlin-android'
+  id 'kotlin-parcelize'
 }
 
 android {
@@ -38,6 +39,7 @@ dependencies {
 
   // Material Design
   implementation 'com.google.android.material:material:1.4.0'
+  implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
 
   // Testing
   testImplementation 'junit:junit:4.13.2'
