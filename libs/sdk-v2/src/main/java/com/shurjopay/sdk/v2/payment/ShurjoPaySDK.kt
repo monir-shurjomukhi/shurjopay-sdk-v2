@@ -36,7 +36,7 @@ class ShurjoPaySDK private constructor() {
     }
 
     // Check minimum and maximum amount check
-    if (data.totalAmount <= 0) {
+    if (data.amount <= 0) {
       listener!!.onFailed(INVALID_AMOUNT)
       return
     }

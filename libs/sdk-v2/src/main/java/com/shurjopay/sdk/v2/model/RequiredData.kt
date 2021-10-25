@@ -8,5 +8,5 @@ import kotlinx.android.parcel.Parcelize
 data class RequiredData(
   var username: String,
   var password: String,
-  var totalAmount: Double
+  var amount: Double
 ) : Parcelable

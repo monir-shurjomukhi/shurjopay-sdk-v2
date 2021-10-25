@@ -8,7 +8,8 @@ import com.shurjopay.sdk.v2.model.RequiredData
 import com.shurjopay.sdk.v2.model.Token
 import com.shurjopay.sdk.v2.networking.ApiClient
 import com.shurjopay.sdk.v2.networking.ApiInterface
-import com.shurjopay.sdk.v2.utils.*
+import com.shurjopay.sdk.v2.utils.DATA
+import com.shurjopay.sdk.v2.utils.SDK_TYPE
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -34,7 +35,8 @@ class PaymentActivity : AppCompatActivity() {
   }
 
   private fun getToken() {
-    val token = Token(data.username, data.password)
+    val token = Token(data.username, data.password, null, null, null,
+      null, null, null, null)
 
     ApiClient().getApiClient(sdkType)?.create(ApiInterface::class.java)?.getToken(token)
       ?.enqueue(object : Callback<Token> {

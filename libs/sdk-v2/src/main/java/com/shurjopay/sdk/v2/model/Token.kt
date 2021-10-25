@@ -2,18 +2,13 @@ package com.shurjopay.sdk.v2.model
 
 
 data class Token(
-    var username: String?,
-    var password: String?,
-) {
-    constructor(
-        username: String,
-        password: String,
-        token: String,
-        store_id: Int,
-        execute_url: String,
-        token_type: String,
-        sp_code: Int,
-        massage: String,
-        expires_in: String
-    ) : this(username, password)
-}
+  var username: String,
+  var password: String,
+  var token: String?,
+  var store_id: Int?,
+  var execute_url: String?,
+  var token_type: String?,
+  var sp_code: Int?,
+  var massage: String?,
+  var expires_in: String?
+)
