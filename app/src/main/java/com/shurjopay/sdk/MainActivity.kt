@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.shurjopay.sdk.databinding.ActivityMainBinding
 import com.shurjopay.sdk.v2.model.RequiredData
 import com.shurjopay.sdk.v2.model.TransactionInfo
 import com.shurjopay.sdk.v2.payment.PaymentResultListener
@@ -12,9 +13,13 @@ import com.shurjopay.sdk.v2.utils.SDK_TYPE_SANDBOX
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
+
+  private lateinit var binding: ActivityMainBinding
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    binding = ActivityMainBinding.inflate(layoutInflater)
+    setContentView(binding.root)
 
       val data = RequiredData(
           "sp_sandbox",
