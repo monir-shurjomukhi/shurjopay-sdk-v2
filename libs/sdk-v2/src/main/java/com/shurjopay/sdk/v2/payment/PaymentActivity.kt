@@ -2,6 +2,7 @@ package com.shurjopay.sdk.v2.payment
 
 import android.os.Bundle
 import android.util.Log
+import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import com.shurjopay.sdk.v2.databinding.ActivityPaymentBinding
 import com.shurjopay.sdk.v2.model.CheckoutRequest
@@ -96,6 +97,12 @@ class PaymentActivity : AppCompatActivity() {
     )?.enqueue(object : Callback<CheckoutResponse> {
       override fun onResponse(call: Call<CheckoutResponse>, response: Response<CheckoutResponse>) {
         Log.d(TAG, "onResponse: ${response.body()}")
+        if (response.isSuccessful) {
+          checkoutResponse = response.body()
+          binding.webView.webViewClient = WebViewClient()
+          binding.webView.settings.javaScriptEnabled = true
+          binding.webView.loadUrl(checkoutResponse?.checkout_url.toString())
+        }
       }
 
       override fun onFailure(call: Call<CheckoutResponse>, t: Throwable) {
