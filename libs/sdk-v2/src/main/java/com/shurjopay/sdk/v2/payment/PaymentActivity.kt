@@ -2,6 +2,8 @@ package com.shurjopay.sdk.v2.payment
 
 import android.os.Bundle
 import android.util.Log
+import android.webkit.WebChromeClient
+import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import com.shurjopay.sdk.v2.databinding.ActivityPaymentBinding
@@ -99,9 +101,7 @@ class PaymentActivity : AppCompatActivity() {
         Log.d(TAG, "onResponse: ${response.body()}")
         if (response.isSuccessful) {
           checkoutResponse = response.body()
-          binding.webView.webViewClient = WebViewClient()
-          binding.webView.settings.javaScriptEnabled = true
-          binding.webView.loadUrl(checkoutResponse?.checkout_url.toString())
+          setupWebView()
         }
       }
 
@@ -109,6 +109,39 @@ class PaymentActivity : AppCompatActivity() {
         Log.e(TAG, "onFailure: ${t.message}", t)
       }
     })
+  }
+
+  private fun setupWebView() {
+    binding.webView.settings.javaScriptEnabled = true
+    binding.webView.settings.loadsImagesAutomatically = true
+    binding.webView.loadUrl(checkoutResponse?.checkout_url.toString())
+    binding.webView.webViewClient = object : WebViewClient() {
+      override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+        Log.d(TAG, "shouldOverrideUrlLoading: url = $url")
+        /*previousUrl.get(0) = currentUrl.get(0)
+        currentUrl.get(0) = url
+        Log.d(TAG, "shouldOverrideUrlLoading: previousUrl[0] = " + previousUrl.get(0))
+        Log.d(TAG, "shouldOverrideUrlLoading: currentUrl[0] = " + currentUrl.get(0))
+        if (currentUrl.get(0).contains("return_url.php")) {
+          //ShurjoPaySDK.listener.onFailed(SPayConstants.Exception.PAYMENT_CANCELLED_BY_USER);
+          //finish();
+          if (previousUrl.get(0).contains("cancel=ok")) {
+            ShurjoPaySDK.listener!!.onFailed(SPayConstants.Exception.PAYMENT_CANCELLED)
+            finish()
+          } else {
+            //getTransactionInfo()
+          }
+        } else {
+          view.loadUrl(url)
+        }*/
+        return false
+      }
+    }
+    binding.webView.webChromeClient = object : WebChromeClient() {
+      override fun onProgressChanged(view: WebView?, newProgress: Int) {
+        binding.progressBar.progress = newProgress
+      }
+    }
   }
 
   companion object {
