@@ -21,30 +21,54 @@ class MainActivity : AppCompatActivity() {
     binding = ActivityMainBinding.inflate(layoutInflater)
     setContentView(binding.root)
 
-      val data = RequiredData(
-          "sp_sandbox",
-          "pyyk97hu&6u6",
-          100.0
-      )
+    binding.submitButton.setOnClickListener { pay() }
+  }
 
-      ShurjoPaySDK.instance?.makePayment(
-          this,
-          SDK_TYPE_SANDBOX,
-          data,
-          object : PaymentResultListener {
-              override fun onSuccess(transactionInfo: TransactionInfo?) {
-                  Log.d(TAG, "onSuccess: transactionInfo = $transactionInfo")
-                  Toast.makeText(
-                      this@MainActivity, "onSuccess: transactionInfo = " +
-                          transactionInfo, Toast.LENGTH_SHORT
-                  ).show()
-              }
+  private fun pay() {
+    val data = RequiredData(
+      "sp_sandbox",
+      "pyyk97hu&6u6",
+      "sp",
+      "BDT",
+      "https://www.sandbox.shurjopayment.com/response",
+      "https://www.sandbox.shurjopayment.com/response",
+      100.0,
+      "sp" + Random().nextInt(1000000),
+      null,
+      null,
+      "127.0.0.1",
+      binding.nameLayout.editText?.text.toString(),
+      binding.phoneLayout.editText?.text.toString(),
+      null,
+      binding.addressLayout.editText?.text.toString(),
+      binding.cityLayout.editText?.text.toString(),
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    )
 
-              override fun onFailed(message: String?) {
-                  Log.d(TAG, "onFailed: message = $message")
-                  Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
-              }
-          })
+    ShurjoPaySDK.instance?.makePayment(
+      this,
+      SDK_TYPE_SANDBOX,
+      data,
+      object : PaymentResultListener {
+        override fun onSuccess(transactionInfo: TransactionInfo?) {
+          Log.d(TAG, "onSuccess: transactionInfo = $transactionInfo")
+          Toast.makeText(
+            this@MainActivity, "onSuccess: transactionInfo = " +
+                transactionInfo, Toast.LENGTH_SHORT
+          ).show()
+        }
+
+        override fun onFailed(message: String?) {
+          Log.d(TAG, "onFailed: message = $message")
+          Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
+        }
+      })
   }
 
   companion object {
