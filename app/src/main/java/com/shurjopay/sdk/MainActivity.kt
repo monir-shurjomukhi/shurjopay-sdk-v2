@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
       "BDT",
       "https://www.sandbox.shurjopayment.com/response",
       "https://www.sandbox.shurjopayment.com/response",
-      100.0,
+      binding.amountLayout.editText?.text.toString().toDouble(),
       "sp" + Random().nextInt(1000000),
       null,
       null,
