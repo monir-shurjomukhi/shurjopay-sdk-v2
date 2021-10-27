@@ -1,19 +1,20 @@
 package com.shurjopay.sdk.v2.payment
 
+import android.net.http.SslError
 import android.os.Bundle
 import android.util.Log
+import android.webkit.SslErrorHandler
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import com.shurjopay.sdk.v2.databinding.ActivityPaymentBinding
-import com.shurjopay.sdk.v2.model.CheckoutRequest
-import com.shurjopay.sdk.v2.model.CheckoutResponse
-import com.shurjopay.sdk.v2.model.RequiredData
-import com.shurjopay.sdk.v2.model.Token
+import com.shurjopay.sdk.v2.model.*
 import com.shurjopay.sdk.v2.networking.ApiClient
 import com.shurjopay.sdk.v2.networking.ApiInterface
 import com.shurjopay.sdk.v2.utils.DATA
+import com.shurjopay.sdk.v2.utils.PAYMENT_CANCELLED
+import com.shurjopay.sdk.v2.utils.PAYMENT_CANCELLED_BY_USER
 import com.shurjopay.sdk.v2.utils.SDK_TYPE
 import retrofit2.Call
 import retrofit2.Callback
@@ -72,8 +73,8 @@ class PaymentActivity : AppCompatActivity() {
       tokenResponse?.store_id!!,
       data.prefix,
       data.currency,
-      data.return_url,
-      data.cancel_url,
+      "https://www.sandbox.shurjopayment.com/return_url",
+      "https://www.sandbox.shurjopayment.com/cancel_url",
       data.amount,
       data.order_id,
       null,
@@ -114,12 +115,19 @@ class PaymentActivity : AppCompatActivity() {
   private fun setupWebView() {
     binding.webView.settings.javaScriptEnabled = true
     binding.webView.settings.loadsImagesAutomatically = true
+    binding.webView.settings.domStorageEnabled = true
     binding.webView.loadUrl(checkoutResponse?.checkout_url.toString())
     binding.webView.webViewClient = object : WebViewClient() {
       override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
         Log.d(TAG, "shouldOverrideUrlLoading: url = $url")
 
-
+        if (url.contains("cancel_url")) {
+          ShurjoPaySDK.listener!!.onFailed(PAYMENT_CANCELLED)
+          finish()
+        }
+        if (url.contains("return_url") && url.contains("order_id")) {
+          verifyPayment()
+        }
 
         /*previousUrl.get(0) = currentUrl.get(0)
         currentUrl.get(0) = url
@@ -139,12 +147,80 @@ class PaymentActivity : AppCompatActivity() {
         }*/
         return false
       }
+
+      override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
+        handler?.proceed()
+      }
     }
     binding.webView.webChromeClient = object : WebChromeClient() {
       override fun onProgressChanged(view: WebView?, newProgress: Int) {
         binding.progressBar.progress = newProgress
       }
     }
+  }
+
+  private fun verifyPayment() {
+    val transactionInfo = TransactionInfo(
+      null,
+      checkoutResponse?.sp_order_id!!,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    )
+
+    ApiClient().getApiClient(sdkType)?.create(ApiInterface::class.java)?.verify(
+      "Bearer " + tokenResponse?.token,
+      transactionInfo
+    )?.enqueue(object : Callback<List<TransactionInfo>> {
+      override fun onResponse(call: Call<List<TransactionInfo>>, response: Response<List<TransactionInfo>>) {
+        Log.d(TAG, "onResponse: ${response.body()}")
+        if (response.isSuccessful) {
+          //checkoutResponse = response.body()
+          //setupWebView()
+
+          if (response.body()?.get(0)?.sp_code == 1000) {
+            ShurjoPaySDK.listener?.onSuccess(response.body()?.get(0))
+            finish()
+          } else {
+            ShurjoPaySDK.listener?.onFailed(response.body()?.get(0)?.sp_massage)
+            finish()
+          }
+        }
+      }
+
+      override fun onFailure(call: Call<List<TransactionInfo>>, t: Throwable) {
+        Log.e(TAG, "onFailure: ${t.message}", t)
+      }
+    })
+  }
+
+  override fun onBackPressed() {
+    ShurjoPaySDK.listener!!.onFailed(PAYMENT_CANCELLED_BY_USER)
+    super.onBackPressed()
   }
 
   companion object {

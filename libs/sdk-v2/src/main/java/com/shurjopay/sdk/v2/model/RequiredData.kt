@@ -10,8 +10,6 @@ data class RequiredData(
   var password: String,
   var prefix: String,
   var currency: String,
-  var return_url: String,
-  var cancel_url: String,
   var amount: Double,
   var order_id: String,
   var discount_amount: String?,

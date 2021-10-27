@@ -9,7 +9,7 @@ import com.shurjopay.sdk.v2.model.RequiredData
 import com.shurjopay.sdk.v2.model.TransactionInfo
 import com.shurjopay.sdk.v2.payment.PaymentResultListener
 import com.shurjopay.sdk.v2.payment.ShurjoPaySDK
-import com.shurjopay.sdk.v2.utils.SDK_TYPE_SANDBOX
+import com.shurjopay.sdk.v2.utils.SDK_TYPE_LIVE
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -26,14 +26,12 @@ class MainActivity : AppCompatActivity() {
 
   private fun pay() {
     val data = RequiredData(
-      "sp_sandbox",
-      "pyyk97hu&6u6",
-      "sp",
+      "paypointDigital",
+      "paypsy6q#jm#5jx5",
+      "PPD",
       "BDT",
-      "https://www.sandbox.shurjopayment.com/response",
-      "https://www.sandbox.shurjopayment.com/response",
       binding.amountLayout.editText?.text.toString().toDouble(),
-      "sp" + Random().nextInt(1000000),
+      "PPD" + Random().nextInt(1000000),
       null,
       null,
       "127.0.0.1",
@@ -53,14 +51,14 @@ class MainActivity : AppCompatActivity() {
 
     ShurjoPaySDK.instance?.makePayment(
       this,
-      SDK_TYPE_SANDBOX,
+      SDK_TYPE_LIVE,
       data,
       object : PaymentResultListener {
         override fun onSuccess(transactionInfo: TransactionInfo?) {
           Log.d(TAG, "onSuccess: transactionInfo = $transactionInfo")
           Toast.makeText(
             this@MainActivity, "onSuccess: transactionInfo = " +
-                transactionInfo, Toast.LENGTH_SHORT
+                transactionInfo, Toast.LENGTH_LONG
           ).show()
         }
 
