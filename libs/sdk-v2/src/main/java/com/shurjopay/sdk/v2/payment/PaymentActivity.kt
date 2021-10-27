@@ -118,6 +118,9 @@ class PaymentActivity : AppCompatActivity() {
     binding.webView.webViewClient = object : WebViewClient() {
       override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
         Log.d(TAG, "shouldOverrideUrlLoading: url = $url")
+
+
+
         /*previousUrl.get(0) = currentUrl.get(0)
         currentUrl.get(0) = url
         Log.d(TAG, "shouldOverrideUrlLoading: previousUrl[0] = " + previousUrl.get(0))

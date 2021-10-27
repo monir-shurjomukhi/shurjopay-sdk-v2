@@ -9,7 +9,7 @@ data class CheckoutRequest(
   var cancel_url: String,
   var amount: Double,
   var order_id: String,
-  var discount_amount: Double?,
+  var discsount_amount: Double?,
   var disc_percent: Int?,
   var client_ip: String,
   var customer_name: String,
