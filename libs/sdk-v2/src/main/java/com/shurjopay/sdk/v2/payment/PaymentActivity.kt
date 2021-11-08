@@ -3,7 +3,6 @@ package com.shurjopay.sdk.v2.payment
 import android.app.ProgressDialog
 import android.net.http.SslError
 import android.os.Bundle
-import android.util.Log
 import android.webkit.SslErrorHandler
 import android.webkit.WebChromeClient
 import android.webkit.WebView
@@ -36,10 +35,12 @@ class PaymentActivity : AppCompatActivity() {
     setContentView(binding.root)
 
     progressDialog = ProgressDialog(this)
+    progressDialog.setMessage("Please Wait...")
+    progressDialog.setCancelable(false)
 
     sdkType = intent.getStringExtra(SDK_TYPE).toString()
     data = intent.getParcelableExtra(DATA)!!
-    Log.d(TAG, "onCreate: data = $data")
+//    Log.d(TAG, "onCreate: data = $data")
 
     getToken()
   }
@@ -54,7 +55,7 @@ class PaymentActivity : AppCompatActivity() {
     ApiClient().getApiClient(sdkType)?.create(ApiInterface::class.java)?.getToken(token)
       ?.enqueue(object : Callback<Token> {
         override fun onResponse(call: Call<Token>, response: Response<Token>) {
-          Log.d(TAG, "onResponse: ${response.body()}")
+//          Log.d(TAG, "onResponse: ${response.body()}")
           if (response.isSuccessful) {
             if (response.body()?.sp_code == 200) {
               tokenResponse = response.body()
@@ -68,7 +69,7 @@ class PaymentActivity : AppCompatActivity() {
         }
 
         override fun onFailure(call: Call<Token>, t: Throwable) {
-          Log.e(TAG, "onFailure: ${t.message}", t)
+//          Log.e(TAG, "onFailure: ${t.message}", t)
           hideProgress()
           ShurjoPaySDK.listener?.onFailed(PAYMENT_DECLINED)
           finish()
@@ -108,7 +109,7 @@ class PaymentActivity : AppCompatActivity() {
       checkoutRequest!!
     )?.enqueue(object : Callback<CheckoutResponse> {
       override fun onResponse(call: Call<CheckoutResponse>, response: Response<CheckoutResponse>) {
-        Log.d(TAG, "onResponse: ${response.body()}")
+//        Log.d(TAG, "onResponse: ${response.body()}")
         hideProgress()
         if (response.isSuccessful) {
           checkoutResponse = response.body()
@@ -120,7 +121,7 @@ class PaymentActivity : AppCompatActivity() {
       }
 
       override fun onFailure(call: Call<CheckoutResponse>, t: Throwable) {
-        Log.e(TAG, "onFailure: ${t.message}", t)
+//        Log.e(TAG, "onFailure: ${t.message}", t)
         hideProgress()
         ShurjoPaySDK.listener?.onFailed(PAYMENT_DECLINED)
         finish()
@@ -135,7 +136,7 @@ class PaymentActivity : AppCompatActivity() {
     binding.webView.loadUrl(checkoutResponse?.checkout_url.toString())
     binding.webView.webViewClient = object : WebViewClient() {
       override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-        Log.d(TAG, "shouldOverrideUrlLoading: url = $url")
+//        Log.d(TAG, "shouldOverrideUrlLoading: url = $url")
 
         if (url.contains("cancel_url")) {
           ShurjoPaySDK.listener!!.onFailed(PAYMENT_CANCELLED)
@@ -197,7 +198,7 @@ class PaymentActivity : AppCompatActivity() {
       transactionInfo
     )?.enqueue(object : Callback<List<TransactionInfo>> {
       override fun onResponse(call: Call<List<TransactionInfo>>, response: Response<List<TransactionInfo>>) {
-        Log.d(TAG, "onResponse: ${response.body()}")
+//        Log.d(TAG, "onResponse: ${response.body()}")
         hideProgress()
         if (response.isSuccessful) {
           if (response.body()?.get(0)?.sp_code == 1000) {
@@ -211,7 +212,7 @@ class PaymentActivity : AppCompatActivity() {
       }
 
       override fun onFailure(call: Call<List<TransactionInfo>>, t: Throwable) {
-        Log.e(TAG, "onFailure: ${t.message}", t)
+//        Log.e(TAG, "onFailure: ${t.message}", t)
         hideProgress()
         ShurjoPaySDK.listener?.onFailed(PLEASE_CHECK_YOUR_PAYMENT)
         finish()
@@ -220,8 +221,6 @@ class PaymentActivity : AppCompatActivity() {
   }
 
   private fun showProgress() {
-    progressDialog.setMessage("Please Wait...")
-    progressDialog.setCancelable(false)
     progressDialog.show()
   }
 
