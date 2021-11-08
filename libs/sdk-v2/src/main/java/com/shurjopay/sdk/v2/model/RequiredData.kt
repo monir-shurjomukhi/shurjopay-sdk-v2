@@ -14,7 +14,6 @@ data class RequiredData(
   var order_id: String,
   var discount_amount: String?,
   var disc_percent: Int?,
-  var client_ip: String,
   var customer_name: String,
   var customer_phone: String,
   var customer_email: String?,

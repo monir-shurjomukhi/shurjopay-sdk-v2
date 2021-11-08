@@ -89,7 +89,7 @@ class PaymentActivity : AppCompatActivity() {
       data.order_id,
       null,
       null,
-      data.client_ip,
+      "127.0.0.1",
       data.customer_name,
       data.customer_phone,
       null,

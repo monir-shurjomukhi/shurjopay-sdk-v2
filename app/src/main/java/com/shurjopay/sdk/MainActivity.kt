@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
       "PPD" + Random().nextInt(1000000),
       null,
       null,
-      "127.0.0.1",
       binding.nameLayout.editText?.text.toString(),
       binding.phoneLayout.editText?.text.toString(),
       null,
