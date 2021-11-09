@@ -9,7 +9,7 @@ import com.shurjopay.sdk.v2.model.RequiredData
 import com.shurjopay.sdk.v2.model.TransactionInfo
 import com.shurjopay.sdk.v2.payment.PaymentResultListener
 import com.shurjopay.sdk.v2.payment.ShurjoPaySDK
-import com.shurjopay.sdk.v2.utils.SDK_TYPE_LIVE
+import com.shurjopay.sdk.v2.utils.Constants
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
 
     ShurjoPaySDK.instance?.makePayment(
       this,
-      SDK_TYPE_LIVE,
+      Constants.SDK_TYPE_LIVE,
       data,
       object : PaymentResultListener {
         override fun onSuccess(transactionInfo: TransactionInfo?) {

@@ -12,7 +12,7 @@ import com.shurjopay.sdk.v2.databinding.ActivityPaymentBinding
 import com.shurjopay.sdk.v2.model.*
 import com.shurjopay.sdk.v2.networking.ApiClient
 import com.shurjopay.sdk.v2.networking.ApiInterface
-import com.shurjopay.sdk.v2.utils.*
+import com.shurjopay.sdk.v2.utils.Constants
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -38,8 +38,8 @@ class PaymentActivity : AppCompatActivity() {
     progressDialog.setMessage("Please Wait...")
     progressDialog.setCancelable(false)
 
-    sdkType = intent.getStringExtra(SDK_TYPE).toString()
-    data = intent.getParcelableExtra(DATA)!!
+    sdkType = intent.getStringExtra(Constants.SDK_TYPE).toString()
+    data = intent.getParcelableExtra(Constants.DATA)!!
 //    Log.d(TAG, "onCreate: data = $data")
 
     getToken()
@@ -63,7 +63,7 @@ class PaymentActivity : AppCompatActivity() {
             }
           } else {
             hideProgress()
-            ShurjoPaySDK.listener?.onFailed(PAYMENT_DECLINED)
+            ShurjoPaySDK.listener?.onFailed(Constants.PAYMENT_DECLINED)
             finish()
           }
         }
@@ -71,7 +71,7 @@ class PaymentActivity : AppCompatActivity() {
         override fun onFailure(call: Call<Token>, t: Throwable) {
 //          Log.e(TAG, "onFailure: ${t.message}", t)
           hideProgress()
-          ShurjoPaySDK.listener?.onFailed(PAYMENT_DECLINED)
+          ShurjoPaySDK.listener?.onFailed(Constants.PAYMENT_DECLINED)
           finish()
         }
       })
@@ -115,7 +115,7 @@ class PaymentActivity : AppCompatActivity() {
           checkoutResponse = response.body()
           setupWebView()
         } else {
-          ShurjoPaySDK.listener?.onFailed(PAYMENT_DECLINED)
+          ShurjoPaySDK.listener?.onFailed(Constants.PAYMENT_DECLINED)
           finish()
         }
       }
@@ -123,7 +123,7 @@ class PaymentActivity : AppCompatActivity() {
       override fun onFailure(call: Call<CheckoutResponse>, t: Throwable) {
 //        Log.e(TAG, "onFailure: ${t.message}", t)
         hideProgress()
-        ShurjoPaySDK.listener?.onFailed(PAYMENT_DECLINED)
+        ShurjoPaySDK.listener?.onFailed(Constants.PAYMENT_DECLINED)
         finish()
       }
     })
@@ -139,7 +139,7 @@ class PaymentActivity : AppCompatActivity() {
 //        Log.d(TAG, "shouldOverrideUrlLoading: url = $url")
 
         if (url.contains("cancel_url")) {
-          ShurjoPaySDK.listener!!.onFailed(PAYMENT_CANCELLED)
+          ShurjoPaySDK.listener!!.onFailed(Constants.PAYMENT_CANCELLED)
           finish()
         }
         if (url.contains("return_url") && url.contains("order_id")) {
@@ -214,7 +214,7 @@ class PaymentActivity : AppCompatActivity() {
       override fun onFailure(call: Call<List<TransactionInfo>>, t: Throwable) {
 //        Log.e(TAG, "onFailure: ${t.message}", t)
         hideProgress()
-        ShurjoPaySDK.listener?.onFailed(PLEASE_CHECK_YOUR_PAYMENT)
+        ShurjoPaySDK.listener?.onFailed(Constants.PLEASE_CHECK_YOUR_PAYMENT)
         finish()
       }
     })
@@ -231,7 +231,7 @@ class PaymentActivity : AppCompatActivity() {
   }
 
   override fun onBackPressed() {
-    ShurjoPaySDK.listener!!.onFailed(PAYMENT_CANCELLED_BY_USER)
+    ShurjoPaySDK.listener!!.onFailed(Constants.PAYMENT_CANCELLED_BY_USER)
     super.onBackPressed()
   }
 
