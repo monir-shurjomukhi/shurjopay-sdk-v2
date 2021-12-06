@@ -12,7 +12,7 @@ data class RequiredData(
   var currency: String,
   var amount: Double,
   var order_id: String,
-  var discount_amount: String?,
+  var discount_amount: Double?,
   var disc_percent: Int?,
   var customer_name: String,
   var customer_phone: String,

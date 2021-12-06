@@ -87,21 +87,21 @@ class PaymentActivity : AppCompatActivity() {
       "https://www.sandbox.shurjopayment.com/cancel_url",
       data.amount,
       data.order_id,
-      null,
-      null,
+      data.discount_amount,
+      data.disc_percent,
       "127.0.0.1",
       data.customer_name,
       data.customer_phone,
-      null,
+      data.customer_email,
       data.customer_address,
       data.customer_city,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null
+      data.customer_state,
+      data.customer_postcode,
+      data.customer_country,
+      data.value1,
+      data.value2,
+      data.value3,
+      data.value4
     )
 
     ApiClient().getApiClient(sdkType)?.create(ApiInterface::class.java)?.checkout(
